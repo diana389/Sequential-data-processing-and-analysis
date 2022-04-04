@@ -8,8 +8,8 @@ typedef struct Node
 {
     int timestamp, ok;
     double value;
-    struct Node *next; // Pointer to next node in DLL
-    struct Node *prev; // Pointer to previous node in DLL
+    struct Node *next;
+    struct Node *prev;
 } Node, *TNode;
 
 typedef struct
@@ -52,15 +52,13 @@ void free_list(DList list, int npairs)
 
 void append(DList list, double val, int time)
 {
-    TNode new_node = (TNode)malloc(sizeof(struct Node)); /* allocate node */
+    TNode new_node = (TNode)malloc(sizeof(struct Node));
 
-    new_node->value = val; /* put in the data  */
+    new_node->value = val;
     new_node->timestamp = time;
 
-    /* This new node is going to be the last node, so make next of it as NULL*/
     new_node->next = NULL;
 
-    /* If the Linked List is empty, then make the new node as head */
     if (list->first == NULL)
     {
         new_node->prev = NULL;
@@ -70,9 +68,8 @@ void append(DList list, double val, int time)
         return;
     }
 
-    /* Make last node as previous of new node */
     new_node->prev = list->last;
-    list->last->next = new_node; /* Change the next of last node */
+    list->last->next = new_node; 
     list->last = new_node;
 
     return;
@@ -113,15 +110,12 @@ void deleteNode(DList list, TNode del)
     if (list->first == NULL || del == NULL)
         return;
 
-    /* If node to be deleted is head node */
     if (list->first == del)
         list->first = del->next;
 
-    /* Change next only if node to be deleted is NOT the last node */
     if (del->next != NULL)
         del->next->prev = del->prev;
 
-    /* Change prev only if node to be deleted is NOT the first node */
     if (del->prev != NULL)
         del->prev->next = del->next;
 
@@ -241,7 +235,6 @@ void e2(DList list, int *npairs)
 
         new_node->next = NULL;
 
-        /* If the Linked List is empty, then make the new node as head */
         if (new_list->first == NULL)
         {
             new_node->prev = NULL;
@@ -250,11 +243,8 @@ void e2(DList list, int *npairs)
         }
         else
         {
-            /* Make last node as previous of new node */
             new_node->prev = new_list->last;
-
-            new_list->last->next = new_node; /* Change the next of last node */
-
+            new_list->last->next = new_node;
             new_list->last = new_node;
         }
 
