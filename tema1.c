@@ -21,7 +21,7 @@ typedef struct
 void print(DList list)
 {
     TNode p = list->first;
-    // printf("\nLista:\n");
+
     if (p == NULL)
         printf("Lista este vida");
     else
@@ -39,12 +39,14 @@ void free_list(DList list, int npairs)
 {
     TNode aux = list->first, p;
     int i;
+
     for (i = 0; i < npairs; i++)
     {
         p = aux->next;
         free(aux);
         aux = p;
     }
+
     free(list);
 }
 
@@ -55,8 +57,7 @@ void append(DList list, double val, int time)
     new_node->value = val; /* put in the data  */
     new_node->timestamp = time;
 
-    /* This new node is going to be the last node, so
-          make next of it as NULL*/
+    /* This new node is going to be the last node, so make next of it as NULL*/
     new_node->next = NULL;
 
     /* If the Linked List is empty, then make the new node as head */
@@ -71,9 +72,7 @@ void append(DList list, double val, int time)
 
     /* Make last node as previous of new node */
     new_node->prev = list->last;
-
     list->last->next = new_node; /* Change the next of last node */
-
     list->last = new_node;
 
     return;
@@ -90,6 +89,7 @@ double average(TNode start)
         avg += p->value;
         p = p->next;
     }
+
     return (double)avg / 5;
 }
 
@@ -104,12 +104,12 @@ double deviation(TNode start, double avg)
         dev += (p->value - avg) * (p->value - avg);
         p = p->next;
     }
+
     return (double)sqrt(dev / 5);
 }
 
 void deleteNode(DList list, TNode del)
 {
-    /* base case */
     if (list->first == NULL || del == NULL)
         return;
 
@@ -125,13 +125,14 @@ void deleteNode(DList list, TNode del)
     if (del->prev != NULL)
         del->prev->next = del->next;
 
-    free(del); /* Free the memory occupied by del*/
+    free(del);
     return;
 }
 
 void init_ok(DList list)
 {
     TNode p = list->first;
+
     if (p != NULL)
     {
         do
@@ -153,14 +154,16 @@ void e1(DList list, int *npairs)
     {
         double avg = average(p);
         double dev = deviation(p, avg);
-        // printf("Average: %.2lf; Deviation: %.2lf\n", avg, dev);
+
         if (mid->value < avg - dev || mid->value > avg + dev)
             mid->ok = 1;
+
         p = p->next;
         mid = mid->next;
     }
 
     p = list->first;
+
     do
     {
         if (p->ok == 1)
@@ -172,11 +175,7 @@ void e1(DList list, int *npairs)
         }
         else
             p = p->next;
-
     } while (p->next != NULL);
-
-    // printf("%d\n", *npairs);
-    // print(list);
 }
 
 void sort(DList list)
@@ -188,6 +187,7 @@ void sort(DList list)
     while (ok)
     {
         ok = 0;
+
         for (p = list->first->next; p != NULL; p = p->next)
             if (p->value < p->prev->value)
             {
@@ -204,16 +204,15 @@ TNode mini_list(TNode start)
     DList mini_lst = (DList)malloc(sizeof(DoubleList));
     mini_lst->first = NULL;
     mini_lst->last = NULL;
-
     TNode p = start;
     int i;
+
     for (i = 0; i < 5; i++)
     {
         append(mini_lst, p->value, p->timestamp);
         p = p->next;
     }
-    // printf("\n");
-    // print(mini_lst);
+
     sort(mini_lst);
 
     TNode new_node = (TNode)malloc(sizeof(struct Node));
@@ -239,8 +238,6 @@ void e2(DList list, int *npairs)
     for (i = 0; i <= *npairs - 5; i++)
     {
         new_node = mini_list(p);
-        // printf("%d %.2lf", new_node->timestamp, new_node->value);
-        // printf("\n");
 
         new_node->next = NULL;
 
@@ -265,12 +262,9 @@ void e2(DList list, int *npairs)
         mid = mid->next;
     }
 
-    // printf("%d\n", *npairs - 4);
-    // print(new_list);
-
     TNode p1, p2;
-
     p1 = list->first;
+
     for (p2 = new_list->first; p2 != NULL; p2 = p2->next)
     {
         p1->value = p2->value;
@@ -287,9 +281,6 @@ void e2(DList list, int *npairs)
 
     *npairs = (*npairs) - 4;
 
-    // printf("%d\n", *npairs);
-    // print(list);
-
     free_list(new_list, *npairs);
 }
 
@@ -298,6 +289,7 @@ TNode medie(TNode start)
     TNode p = start;
     int i;
     double sum = 0;
+
     for (i = 0; i < 5; i++)
     {
         sum += p->value;
@@ -307,6 +299,7 @@ TNode medie(TNode start)
     TNode new_node = (TNode)malloc(sizeof(struct Node));
     new_node->timestamp = start->next->next->timestamp;
     new_node->value = (double)sum / 5;
+
     return new_node;
 }
 
@@ -337,9 +330,7 @@ void e3(DList list, int *npairs)
         else
         {
             new_node->prev = new_list->last;
-
             new_list->last->next = new_node;
-
             new_list->last = new_node;
         }
 
@@ -347,12 +338,9 @@ void e3(DList list, int *npairs)
         mid = mid->next;
     }
 
-    // printf("%d\n", *npairs - 4);
-    // print(new_list);
-
     TNode p1, p2;
-
     p1 = list->first;
+
     for (p2 = new_list->first; p2 != NULL; p2 = p2->next)
     {
         p1->value = p2->value;
@@ -375,13 +363,13 @@ void e3(DList list, int *npairs)
 void u(DList list, int npairs)
 {
     TNode p;
+
     for (p = list->first->next; p != NULL; p = p->next)
     {
         int dif = abs(p->timestamp - p->prev->timestamp);
-        // printf("dif:%d\n", dif);
+
         if (dif >= 100 && dif <= 1000)
         {
-
             p->timestamp = (double)(p->timestamp + p->prev->timestamp) / 2;
             p->value = (double)(p->value + p->prev->value) / 2;
         }
@@ -391,9 +379,7 @@ void u(DList list, int npairs)
 void insertAfter(TNode prev_node, int new_timestamp, double new_value)
 {
     if (prev_node == NULL)
-    {
         return;
-    }
 
     TNode new_node = (TNode)malloc(sizeof(Node));
 
@@ -410,23 +396,31 @@ void insertAfter(TNode prev_node, int new_timestamp, double new_value)
 
 void c(DList list, int *npairs)
 {
-    TNode p;
+    TNode p, left1, left2, left3, right1, right2, right3;
     double C, f, w03 = (double)0.1 / 1.425, w13 = (double)0.325 / 1.425, w23 = (double)1 / 1.425;
     int new_timestamp;
-    
+
     for (p = list->first; p->next != NULL; p = p->next)
     {
         int dif = abs(p->next->timestamp - p->timestamp);
+
         if (dif >= 1000)
         {
             new_timestamp = p->timestamp + 200;
-            while (new_timestamp < p->next->timestamp)
+            left1 = p->prev->prev;
+            left2 = p->prev;
+            left3 = p;
+            right1 = p->next->next->next;
+            right2 = p->next->next;
+            right3 = p->next;
+
+            while (new_timestamp < right3->timestamp)
             {
-                C = (double)(200) / (p->next->timestamp - p->timestamp);
-                printf("p->next->timestamp=%d\np->timestamp=%d\n", p->next->timestamp, p->timestamp);
-                f = (double)(1 - C) * ((p->prev->prev->value * w03 + p->prev->value * w13 + p->value * w23) + C * (p->next->next->next->value * w03 + p->next->next->value * w13 + p->next->value * w23));
-                printf("p->timestamp=%d\nC=%lf\nw03=%lf\nw13=%lf\nw23=%lf\nf=%lf\n", p->timestamp, C, w03, w13, w23, f);
+                C = (double)(new_timestamp - left3->timestamp) / (right3->timestamp - left3->timestamp);
+                f = (1 - C) * (left1->value * w03 + left2->value * w13 + left3->value * w23) + C * (right1->value * w03 + right2->value * w13 + right3->value * w23);
+
                 insertAfter(p, new_timestamp, f);
+
                 (*npairs)++;
                 p = p->next;
                 new_timestamp = p->timestamp + 200;
@@ -435,12 +429,14 @@ void c(DList list, int *npairs)
     }
 }
 
-int st(DList list, int npairs, int delta)
+int st(DList list, int delta)
 {
     sort(list);
+
     TNode p = list->first;
-    int start = 0, end = delta, k, ok = 1;
-    while (p->next != NULL)
+    int start = floor(p->value), end = start + delta, k, ok = 1;
+
+    while (ok == 1)
     {
         k = 0;
         while (p->value >= start && p->value <= end && ok == 1)
@@ -452,10 +448,9 @@ int st(DList list, int npairs, int delta)
                 ok = 0;
         }
         if (k > 0)
-            printf("[%d,%d] %d\n", start, end, k);
+            printf("[%d, %d] %d\n", start, end, k);
         start += delta;
         end += delta;
-        // 0, 1, 4, 12, 15, 251, 252, 1008, 1128
     }
     return 1;
 }
@@ -463,12 +458,13 @@ int st(DList list, int npairs, int delta)
 int main(int argc, char **argv)
 {
     int npairs, i, arg, ok = 0;
-    scanf("%d", &npairs);
     DList list = (DList)malloc(sizeof(DoubleList));
     double val;
     int time;
     list->first = NULL;
     list->last = NULL;
+
+    scanf("%d", &npairs);
 
     for (i = 0; i < npairs; i++)
     {
@@ -509,7 +505,7 @@ int main(int argc, char **argv)
             int delta = 0;
             for (i = 4; i < strlen(argv[arg]); i++)
                 delta = delta * 10 + (argv[arg][i] - '0');
-            ok = st(list, npairs, delta);
+            ok = st(list, delta);
             continue;
         }
     }
@@ -521,32 +517,5 @@ int main(int argc, char **argv)
     }
 
     free_list(list, npairs);
-
     return 0;
 }
-
-/*
-10
-1 0.000000
-2 0.314159
-3 0.628314
-4 0.942464
-5 −1.743396
-6 1.570732
-7 1.884844
-8 2.198938
-9 2.513010
-10 2.827057
-
-10
-1 0.00
-2 0.31
-3 0.62
-4 0.94
-5 −1.74
-6 1.57
-7 1.88
-8 2.19
-9 2.51
-10 2.82
-*/
